@@ -1,11 +1,12 @@
 --cpu=Cortex-M4.fp.sp
 "f407_flash_rw_test\startup_stm32f407xx.o"
+"f407_flash_rw_test\flash.o"
 "f407_flash_rw_test\main.o"
 "f407_flash_rw_test\gpio.o"
+"f407_flash_rw_test\dma.o"
 "f407_flash_rw_test\usart.o"
 "f407_flash_rw_test\stm32f4xx_it.o"
 "f407_flash_rw_test\stm32f4xx_hal_msp.o"
-"f407_flash_rw_test\flash.o"
 "f407_flash_rw_test\stm32f4xx_hal_tim.o"
 "f407_flash_rw_test\stm32f4xx_hal_tim_ex.o"
 "f407_flash_rw_test\stm32f4xx_hal_uart.o"

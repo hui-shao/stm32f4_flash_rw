@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -91,11 +92,13 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("System Enable\r\n");
-  // printf("FLASH CR SR %u %u\r\n", FLASH->CR, FLASH->SR);
-  Flash_RW_Test();
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart3, (uint8_t *)uart3_rx_buf, UART3_RX_BUF_LEN); //首次开启空闲中断DMA发送
+  // Flash_RW_Test(); // 仅做测试
   /* USER CODE END 2 */
 
   /* Infinite loop */
