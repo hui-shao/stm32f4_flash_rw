@@ -149,8 +149,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     hdma_usart3_rx.Init.MemInc = DMA_MINC_ENABLE;
     hdma_usart3_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart3_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-    hdma_usart3_rx.Init.Mode = DMA_CIRCULAR;
-    hdma_usart3_rx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart3_rx.Init.Mode = DMA_NORMAL;
+    hdma_usart3_rx.Init.Priority = DMA_PRIORITY_MEDIUM;
     hdma_usart3_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart3_rx) != HAL_OK)
     {
@@ -168,7 +168,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *uartHandle)
     hdma_usart3_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
     hdma_usart3_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
     hdma_usart3_tx.Init.Mode = DMA_NORMAL;
-    hdma_usart3_tx.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_usart3_tx.Init.Priority = DMA_PRIORITY_MEDIUM;
     hdma_usart3_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_usart3_tx) != HAL_OK)
     {
@@ -239,20 +239,19 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 { // Size为接收到的数据大小
   if (huart->Instance == USART3)
   {
-    HAL_UART_DMAStop(&huart3);                                                        // 关闭是为了重新设置发送多少数据，不关闭会造成数据错误
-    uart3_rx_size = (Size < UART3_RX_BUF_LEN) ? (Size) : ((uint8_t)UART3_RX_BUF_LEN); // 记录接受到的长度
-    uart3_rx_buf[uart3_rx_size - 1] = 0;                                              // 设置结束位
+    HAL_UART_DMAStop(&huart3);                                                            // 关闭是为了重新设置发送多少数据，不关闭会造成数据错误
+    uart3_rx_size = (Size < UART3_RX_BUF_LEN) ? (Size) : ((uint8_t)UART3_RX_BUF_LEN - 1); // 记录接受到的长度
+    uart3_rx_buf[uart3_rx_size] = 0;                                                      // 设置结束位
 
     printf("%s\r\n", uart3_rx_buf); // 打到串口一看看
-
-    UART3_Continue_Receive();
+    UART3_Start_ReceiveToIdle();
   }
 }
 
-void UART3_Continue_Receive(void)
+void UART3_Start_ReceiveToIdle(void)
 {
   memset(uart3_rx_buf, 0, UART3_RX_BUF_LEN);
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart3, (uint8_t *)uart3_rx_buf, UART3_RX_BUF_LEN); //继续开启空闲中断DMA发送
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart3, (uint8_t *)uart3_rx_buf, UART3_RX_BUF_LEN - 1); //继续开启空闲中断DMA发送
+  __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);                                     // 关闭半传输中断, 否则每次进中断时只能受到缓冲区大小一半的数据
 }
-
 /* USER CODE END 1 */
