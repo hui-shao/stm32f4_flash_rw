@@ -49,6 +49,7 @@ extern "C"
   extern char uart3_rx_buf[];
   extern char uart3_tx_buf[];
   extern uint8_t uart3_rx_size;
+  extern __IO uint8_t uart3_rx_flag;
   void UART3_Start_ReceiveToIdle(void);
   /* USER CODE END Prototypes */
 

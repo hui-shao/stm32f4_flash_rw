@@ -30,4 +30,5 @@ f407_flash_rw_test/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
   ..\Core\Inc\dma.h ..\Core\Inc\usart.h ..\Core\Inc\gpio.h \
-  F:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h ..\Core\Inc\flash.h
+  F:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  F:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h ..\Core\Inc\flash.h

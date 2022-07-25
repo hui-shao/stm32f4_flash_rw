@@ -27,6 +27,7 @@
 char uart3_rx_buf[UART3_RX_BUF_LEN];
 char uart3_tx_buf[UART3_TX_BUF_LEN];
 uint8_t uart3_rx_size; // 用于记录接受到的数据的长度
+__IO uint8_t uart3_rx_flag = 0;
 
 /* USER CODE END 0 */
 
@@ -243,14 +244,15 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     uart3_rx_size = (Size < UART3_RX_BUF_LEN) ? (Size) : ((uint8_t)UART3_RX_BUF_LEN - 1); // 记录接受到的长度
     uart3_rx_buf[uart3_rx_size] = 0;                                                      // 设置结束位
 
-    printf("%s\r\n", uart3_rx_buf); // 打到串口一看看
-    UART3_Start_ReceiveToIdle();
+    // printf("%s\r\n", uart3_rx_buf); // 打到串口一看看 for test
+    uart3_rx_flag = 1;
   }
 }
 
 void UART3_Start_ReceiveToIdle(void)
 {
   memset(uart3_rx_buf, 0, UART3_RX_BUF_LEN);
+  uart3_rx_flag = 0;
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3, (uint8_t *)uart3_rx_buf, UART3_RX_BUF_LEN - 1); //继续开启空闲中断DMA发送
   __HAL_DMA_DISABLE_IT(&hdma_usart3_rx, DMA_IT_HT);                                     // 关闭半传输中断, 否则每次进中断时只能受到缓冲区大小一半的数据
 }

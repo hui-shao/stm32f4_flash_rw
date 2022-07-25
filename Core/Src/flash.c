@@ -1,7 +1,7 @@
 /*
  * @Author: Hui-Shao
  * @Date: 2022-07-22 15:30:44
- * @LastEditTime: 2022-07-23 14:54:15
+ * @LastEditTime: 2022-07-25 10:45:09
  * @Description:
  *
  *  Flash读写 注意在 flash.h 进行相关配置
@@ -61,6 +61,7 @@ void Flash_Read_Word(uint32_t *pBuffer, uint32_t NumToRead)
 {
     uint16_t i = 0;
     uint32_t Address = FLASH_USER_START_ADDR;
+    printf("Flash read start.\r\n");
     while ((Address < FLASH_USER_END_ADDR) && (i < NumToRead))
     {
         pBuffer[i++] = *(__IO uint32_t *)Address;
@@ -95,7 +96,6 @@ void Flash_RW_Test(void)
     Flash_Erase_Sector();                                                     // 再擦除
     Flash_Write_Word((uint32_t *)TEXT_Buffer, (sizeof(TEXT_Buffer) + 3) / 4); // 4个8位组成一个32位;加3是为了向上取整
     Flash_Lock();
-    printf("Write finished. Ready to read.....\r\n");
 #endif
     Flash_Read_Word((uint32_t *)Read_Buf, 10); // 注意最大长度。一方面不要超过Sector, 另一方面不要超过转为u32后数组长度
     printf("Read result: %s\r\n", Read_Buf);
