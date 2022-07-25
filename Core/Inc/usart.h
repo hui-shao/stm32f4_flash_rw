@@ -22,34 +22,35 @@
 #define __USART_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* USER CODE BEGIN Includes */
+  /* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
+  /* USER CODE END Includes */
 
-extern UART_HandleTypeDef huart1;
+  extern UART_HandleTypeDef huart1;
 
-extern UART_HandleTypeDef huart2;
+  extern UART_HandleTypeDef huart2;
 
-extern UART_HandleTypeDef huart3;
+  extern UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN Private defines */
 #define UART3_RX_BUF_LEN 256
 #define UART3_TX_BUF_LEN 256
 #define UART2_RX_BUF_LEN 256
 #define UART2_TX_BUF_LEN 256
-/* USER CODE END Private defines */
+  /* USER CODE END Private defines */
 
-void MX_USART1_UART_Init(void);
-void MX_USART2_UART_Init(void);
-void MX_USART3_UART_Init(void);
+  void MX_USART1_UART_Init(void);
+  void MX_USART2_UART_Init(void);
+  void MX_USART3_UART_Init(void);
 
-/* USER CODE BEGIN Prototypes */
+  /* USER CODE BEGIN Prototypes */
   extern char uart3_rx_buf[], uart2_rx_buf[];
   extern char uart3_tx_buf[], uart2_tx_buf[];
   extern uint8_t uart3_rx_size, uart3_rx_size;
@@ -57,11 +58,13 @@ void MX_USART3_UART_Init(void);
   void UART3_Start_ReceiveToIdle(void);
   void UART2_Start_ReceiveToIdle(void);
   void UART_USER_Receive_Handler(void);
-/* USER CODE END Prototypes */
+  void u3_transmit_dma(uint16_t len);
+  void u3_printf_dma(char *fmt, ...);
+  void Bluetooth_PackandSend(void);
+  /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* __USART_H__ */
-

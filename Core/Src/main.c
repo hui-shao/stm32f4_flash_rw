@@ -58,11 +58,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-int fputc(int ch, FILE *f)
-{
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
-  return ch;
-}
 /* USER CODE END 0 */
 
 /**
@@ -98,10 +93,14 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   printf("System Enable\r\n");
   UART2_Start_ReceiveToIdle();
   UART3_Start_ReceiveToIdle(); //首次开启空闲中断DMA发送
+  Bluetooth_PackandSend(); // UART test
+
   // Flash_RW_Test(); // 仅做测试
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
