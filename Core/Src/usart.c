@@ -446,6 +446,56 @@ void UART_USER_Receive_Handler(void)
 }
 
 /**
+ * @description: 向 USART2 串口发送缓冲区中的原始数据 DMA模式 注意：调用前应设置好 uart2_tx_buf 内容
+ * @param {uint16_t} len 所要发送数据的长度
+ * @return {*}
+ */
+void u2_transmit_dma(uint16_t len)
+{
+  //等待上一次的数据发送完毕
+  while (HAL_DMA_GetState(&hdma_usart2_tx) != HAL_DMA_STATE_READY)
+    ;
+  if (len > UART2_TX_BUF_LEN)
+  {
+    len = UART2_TX_BUF_LEN;
+  }
+  HAL_UART_Transmit_DMA(&huart2, (uint8_t *)uart2_tx_buf, len);
+}
+
+/**
+ * @description: 向 USART2 串口发送缓冲区中字符串 DMA模式 注意，\00将被移除
+ * @param {char} *fmt 需要发送的字符串
+ * @return {*}
+ */
+void u2_printf_dma(char *fmt, ...)
+{
+  //等待上一次的数据发送完毕
+  while (HAL_DMA_GetState(&hdma_usart2_tx) != HAL_DMA_STATE_READY)
+    ;
+
+  memset(uart2_tx_buf, 0, UART2_TX_BUF_LEN);
+  uint16_t i, j;
+  va_list ap;
+  va_start(ap, fmt);
+  vsprintf((char *)uart2_tx_buf, fmt, ap);
+  va_end(ap);
+
+  for (i = 0; i < UART2_TX_BUF_LEN; i++)
+  {
+    j = i + 1;
+    if (uart2_tx_buf[i] == '\00')
+    {
+      for (; j < UART2_TX_BUF_LEN; j++)
+      {
+        uart2_tx_buf[j - 1] = uart2_tx_buf[j];
+      }
+    }
+  }
+  i = strlen((const char *)uart2_tx_buf);
+  HAL_UART_Transmit_DMA(&huart2, (uint8_t *)uart2_tx_buf, i);
+}
+
+/**
  * @description: 向 USART3 串口发送缓冲区中的原始数据 DMA模式 注意：调用前应设置好 uart3_tx_buf 内容
  * @param {uint16_t} len 所要发送数据的长度
  * @return {*}

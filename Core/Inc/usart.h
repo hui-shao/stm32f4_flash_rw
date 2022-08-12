@@ -58,6 +58,8 @@ extern "C"
   void UART3_Start_ReceiveToIdle(void);
   void UART2_Start_ReceiveToIdle(void);
   void UART_USER_Receive_Handler(void);
+  void u2_transmit_dma(uint16_t len);
+  void u2_printf_dma(char *fmt, ...);
   void u3_transmit_dma(uint16_t len);
   void u3_printf_dma(char *fmt, ...);
   void Bluetooth_PackandSend(void);
